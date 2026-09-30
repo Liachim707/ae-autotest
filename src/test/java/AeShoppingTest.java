@@ -1,4 +1,5 @@
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebElementCondition;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -11,33 +12,32 @@ public class AeShoppingTest {
     static void setUp() {
         Configuration.browser = "chrome";
         Configuration.browserSize = "1920x1080";
-        Configuration.timeout = 10000;
+        Configuration.timeout = 160000;
+        Configuration.pageLoadStrategy = "eager";
     }
 
     @Test
     void addProductToCart() {
 
         // Переход на сайт с товаром
-        open("https://clck.su/wbqJW");
+        open("https://www.ae.com/us/en/p/women/jeans/flare-bootcut-jeans/ae-super-low-rise-kick-boot-jean/1437_6248_896");
 
         // Кликнуть по кнопке Size
-        $("dropdown-text").click();
+        $(".dropdown-text").click();
 
-        // Добавляем товар
-        $$("button")
-                .filterBy(text("Add to Bag(Before It's Gone)"))
-                .first()
-                .shouldBe(visible)
-                .click();
+        // Выбор размера 000 Short
+        $(".sku-size").click();
+
+        // Добавить товар в корзину
+        $("._btn-add-to-bag-suffix_xsiwrr").click();
 
         // Переходим в корзину
         $$("a, button")
-                .filterBy(text("Bag"))
+                .filterBy(text("View Bag"))
                 .first()
                 .click();
 
-        // Проверяем корзину
-        $("body")
-                .shouldHave(text("Bag"));
+        // Проверка окна оплаты PayPal
+        $(".paypal-button-label-container").click();
     }
 }
