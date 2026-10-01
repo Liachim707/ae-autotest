@@ -1,10 +1,10 @@
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.WebElementCondition;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverConditions.urlContaining;
 
 public class AeShoppingTest {
 
@@ -12,7 +12,7 @@ public class AeShoppingTest {
     static void setUp() {
         Configuration.browser = "chrome";
         Configuration.browserSize = "1920x1080";
-        Configuration.timeout = 160000;
+        Configuration.timeout = 150000;
         Configuration.pageLoadStrategy = "eager";
     }
 
@@ -37,7 +37,10 @@ public class AeShoppingTest {
                 .first()
                 .click();
 
-        // Проверка окна оплаты PayPal
+        // Переключение во фрейм и нажатие кнопки PayPal
+        switchTo().frame($("iframe[title*='PayPal']").shouldBe(visible));
         $(".paypal-button-label-container").click();
+        switchTo().window(1);
+        webdriver().shouldHave(urlContaining("paypal.com"));
     }
 }
